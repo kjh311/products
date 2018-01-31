@@ -1,0 +1,74 @@
+
+
+  <!DOCTYPE html>
+<html>
+<head>
+  <title>Products Catalog</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+  <style type="text/css" media="screen">
+    .product-images{
+      height: 200px;
+    }
+    
+  </style>
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> <!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- Latest compiled and minified JavaScript -->
+
+</head>
+<body>
+
+
+  <ul class="products">
+    <li class="products">
+      <span><%= product.name %></span>
+  </br>
+      <span><%= product.description %></span>
+      </br>
+      <span><img class="product-images" src="<%= product.image %>" alt=""></span>
+    </li>
+
+  </ul>
+
+  <form action="/api/products" method="POST">
+    <input type="text" placeholder="name" name="name">
+    <input type="text" placeholder="description" name="description">
+    <input type="text" placeholder="image" name="image">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form id="delete-form" action='/api/products/<%=product._id%>' method="POST">
+  <button class="btn-danger" type="submit">Delete</button>
+</form>
+
+
+
+
+  <script>
+    
+$( document ).ready(function() {
+
+  $('#delete-form').submit(function(e){
+    e.preventDefault();
+    var formAction = $(this).attr('action');
+    $.ajax({
+      url: formAction,
+      type: 'DELETE'
+      ,
+      success: function(){
+
+      }
+    })
+    $(location).attr('href','/api/products');
+  });
+
+
+
+
+
+});
+
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

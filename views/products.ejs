@@ -1,0 +1,42 @@
+
+
+  <!DOCTYPE html>
+<html>
+<head>
+  <title>Products Catalog</title>
+  <!-- <link rel="stylesheet" type="text/css" href="/styles/style.css"> -->
+  <style type="text/css" media="screen">
+    .product-images{
+      height: 200px;
+    }
+    
+  </style>
+</head>
+<body>
+
+
+  <ul class="products">
+  <% for(var i=0; i<products.length; i++) {%>
+  <a href="/api/products/<%= products[i]._id %>" title="">
+    <li class="products">
+      <span><%= products[i].name %></span>
+  </br>
+      <!-- <span><%= products[i].description %></span> -->
+      </br>
+      <span><img class="product-images" src="<%= products[i].image %>" alt=""></span>
+    </li>
+    </a>
+  <% } %>
+  </ul>
+
+  <form action="/api/products" method="POST">
+    <input type="text" placeholder="name" name="name">
+    <input type="text" placeholder="description" name="description">
+    <input type="text" placeholder="image" name="image">
+    <button type="submit">Submit</button>
+  </form>
+
+
+
+</body>
+</html>
