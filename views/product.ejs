@@ -22,6 +22,8 @@
   <ul class="products">
     <li class="products">
       <span><%= product.name %></span>
+    </br>
+      <span>$<%= product.price %></span>
   </br>
       <span><%= product.description %></span>
       </br>
@@ -30,16 +32,21 @@
 
   </ul>
 
-  <form action="/api/products" method="POST">
+<!--   <form action="/api/products" method="POST">
     <input type="text" placeholder="name" name="name">
     <input type="text" placeholder="description" name="description">
     <input type="text" placeholder="image" name="image">
     <button type="submit">Submit</button>
-  </form>
+  </form> -->
 
   <form id="delete-form" action='/api/products/<%=product._id%>' method="POST">
   <button class="btn-danger" type="submit">Delete</button>
 </form>
+
+  <form id="edit-form" action='/api/products/<%=product._id%>' method="POST">
+  <button class="btn-danger" type="submit">Edit</button>
+</form>
+
 
 
 

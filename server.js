@@ -10,11 +10,15 @@ var password = require('./password.js');
 
 console.log(password);
 
+// process.env.PASSWORD = password;
+
+// console.log(process.env)
+
 MongoClient.connect('mongodb://'+password+'@ds119688.mlab.com:19688/product-catalog', (err, database) => {
   if (err) return console.log(err)
   	// console.log(database) 
   db = database.db('product-catalog');
-  db.collection('products');
+  myDb = db.collection('products');
   app.listen(process.env.PORT || 3000, () => {
     console.log('listening on 3000')
   })
@@ -36,11 +40,12 @@ app.get('/', (req, res) => {
     // if (err) return console.log(err)
     // renders index.ejs
     res.render('index.ejs')
+    // res.send(password);
   // })
 })
 
 app.get('/api', (req, res) => {
-  db.collection('products').find().toArray((err, doc) => {
+  myDb.find().toArray((err, doc) => {
     if (err) return console.log(err)
     // renders index.ejs
     // res.render('products.ejs', {products: result})
@@ -49,7 +54,7 @@ app.get('/api', (req, res) => {
 })
 
 app.get('/api/products', (req, res) => {
-  db.collection('products').find().toArray((err, result) => {
+  myDb.find().toArray((err, result) => {
     if (err) return console.log(err)
     // renders index.ejs
     res.render('products.ejs', {products: result})
@@ -58,7 +63,10 @@ app.get('/api/products', (req, res) => {
 
 app.get('/api/products/:id', function(req, res){
 	// res.send('list  product ' + req.params.id);
-	db.collection('products').findOne({_id: mongojs.ObjectId(req.params.id)}, function(err, result){
+	myDb.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err, result){
+	// myDb.findOne({_id: mongojs.ObjectId(req.params.id)}, 
+		// function(err, doc){
+		// function(err, result){
 		if(err){
 			res.send(err);
 		}
@@ -70,8 +78,8 @@ app.get('/api/products/:id', function(req, res){
 });
 
 app.post('/api/products', (req, res) => {
-  db.collection('products').save(req.body, (err, result) => {
-  // db.collection('products').insert(req.body, (err, doc) => {
+  myDb.save(req.body, (err, result) => {
+  // myDb.insert(req.body, (err, doc) => {
     if (err) return console.log(err)
     console.log('saved to database')
     res.redirect('/api/products')
@@ -79,26 +87,31 @@ app.post('/api/products', (req, res) => {
   })
 })
 
-app.put('/api/products/:id', (req,res) => {
+app.put('/api/products/:id', (req,res,next) => {
 	
-	db.collection('products').findAndModify({query: {_id: mongojs.ObjectId(req.params.id)}, 
+	myDb.findAndModify({query: {_id: mongojs.ObjectId(req.params.id)}, 
 		update: {
 		$set: {
 			name: req.body.name,
 			description: req.body.description,
+			price: req.body.price,
 			image: req.body.image
-		}},
-		new: true }, (err, doc) => {
+		}
+	},
+		new: true, }, 
+		function (err, doc){
 			if(err){
 				res.send(err);
 			}
 			console.log('updating product');
 			res.json(doc);
+			// console.log('saved to database')
+    		// res.redirect('/api/products')
 		})
 });
 
 // app.put('/api/products/:id', (req, res) => {
-//   db.collection('products').findOneAndUpdate({query: {_id: mongojs.ObjectId(req.params.id)},
+//   myDb.findOneAndUpdate({query: {_id: mongojs.ObjectId(req.params.id)},
 //     update: {
 //     	$set: {
 //       name: req.body.name,
@@ -115,7 +128,7 @@ app.put('/api/products/:id', (req,res) => {
 // });
 
 app.delete('/api/products/:id', function(req,res,next){
-	db.collection('products').remove({_id: mongojs.ObjectId(req.params.id)}, (err, doc) => {
+	myDb.remove({_id: mongojs.ObjectId(req.params.id)}, (err, doc) => {
 		if(err){
 				res.send(err);
 			}
